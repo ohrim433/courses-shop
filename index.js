@@ -1,12 +1,13 @@
 const express = require('express');
 const path = require('path');
+const csrf = require('csurf');
 const _handlebars = require('handlebars');
 const exphbs = require('express-handlebars');
 const session = require('express-session');
+const flash = require('connect-flash');
 const MongoStore = require('connect-mongodb-session')(session);
 const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access')
 const mongoose = require('mongoose');
-const User = require('./models/user');
 const varMiddleware = require('./middleware/variables');
 const userMiddleware = require('./middleware/user');
 const MONGODB_URI = require('./enums/db-enums');
@@ -45,7 +46,8 @@ app.use(session({
     saveUninitialized: false,
     store
 }));
-
+app.use(csrf());
+app.use(flash());
 app.use(varMiddleware);
 app.use(userMiddleware);
 

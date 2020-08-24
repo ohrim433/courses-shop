@@ -1,4 +1,5 @@
 const {Router} = require('express');
+const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 
 const router = Router();
@@ -6,21 +7,41 @@ const router = Router();
 router.get('/login', async (req, res) => {
     res.render('auth/login', {
         title: 'Authorization',
-        isLogin: true
+        isLogin: true,
+        loginError: req.flash('loginError'),
+        registerError: req.flash('registerError'),
     })
 })
 
 router.post('/login', async (req, res) => {
-    const user = await User.findById('5f3a67480309a91afc335499');
-    req.session.user = user;
-    req.session.isAuthenticated = true;
-    req.session.save((err) => {
-        if (err) {
-            throw err;
+    try {
+        const {email, password} = req.body;
+        const candidate = await User.findOne({email});
+
+        if (candidate) {
+            const areSame = await bcrypt.compare(password, candidate.password);
+
+            if (areSame) {
+                req.session.user = candidate;
+                req.session.isAuthenticated = true;
+                req.session.save((err) => {
+                    if (err) {
+                        throw err;
+                    } else {
+                        res.redirect('/');
+                    }
+                })
+            } else {
+                req.flash('loginError', 'User does not exists');
+                res.redirect('/auth/login#login');
+            }
         } else {
-            res.redirect('/');
+            req.flash('loginError', 'User does not exists');
+            res.redirect('/auth/login#login');
         }
-    })
+    } catch (e) {
+        console.log(e);
+    }
 });
 
 router.post('/register', async (req, res) => {
@@ -29,12 +50,14 @@ router.post('/register', async (req, res) => {
         const candidate = await User.findOne({email});
 
         if (candidate) {
-            res.redirect('/login#register');
+            req.flash('registerError', 'This email is already used');
+            res.redirect('/auth/login#register');
         } else {
+            const hashedPassword = await bcrypt.hash(password, 10);
             const user = new User({
                 email,
                 name,
-                password,
+                password: hashedPassword,
                 cart: {items: []}
             });
 
