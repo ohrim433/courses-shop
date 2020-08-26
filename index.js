@@ -10,7 +10,7 @@ const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-acce
 const mongoose = require('mongoose');
 const varMiddleware = require('./middleware/variables');
 const userMiddleware = require('./middleware/user');
-const MONGODB_URI = require('./enums/db-enums');
+const {MONGODB_URI, SESSION_SECRET} = require('./enums/db-enums');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -41,7 +41,7 @@ app.use(express.static(path.join(__dirname, 'public'))); // set "public" as stat
 app.use(express.urlencoded({extended: true}));
 
 app.use(session({
-    secret: 'some secret value',
+    secret: SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store

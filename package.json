@@ -21,7 +21,8 @@
     "express-session": "^1.17.1",
     "handlebars": "^4.7.6",
     "mongoose": "^5.9.28",
-    "uuid": "^8.3.0"
+    "nodemailer": "^6.4.11",
+    "nodemailer-sendgrid-transport": "^0.2.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.4",
@@ -31,6 +32,7 @@
     "@types/connect-mongodb-session": "^0.0.3",
     "@types/bcryptjs": "^2.4.2",
     "@types/csurf": "^1.9.36",
-    "@types/connect-flash": "^0.0.35"
+    "@types/connect-flash": "^0.0.35",
+    "@types/nodemailer": "^6.4.0"
   }
 }
