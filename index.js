@@ -8,9 +8,11 @@ const flash = require('connect-flash');
 const MongoStore = require('connect-mongodb-session')(session);
 const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access')
 const mongoose = require('mongoose');
+
+const { SESSION_SECRET } = require('./config');
+const { MONGODB_URI } = require('./enums/db-enums');
 const varMiddleware = require('./middleware/variables');
 const userMiddleware = require('./middleware/user');
-const {MONGODB_URI, SESSION_SECRET} = require('./enums/db-enums');
 
 const app = express();
 const PORT = process.env.PORT || 3000;

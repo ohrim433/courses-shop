@@ -1,10 +1,11 @@
-const {Router} = require('express');
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
+const { Router } = require('express');
 const sendgrid = require('nodemailer-sendgrid-transport');
-const User = require('../models/user');
-const {SENDGRID_API_KEY} = require('../enums/db-enums');
+
 const registrationEmail = require('../emails/registration');
+const {SENDGRID_API_KEY} = require('../enums/db-enums');
+const User = require('../models/user');
 
 const router = Router();
 const transporter = nodemailer.createTransport(sendgrid({
