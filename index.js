@@ -20,7 +20,8 @@ const PORT = process.env.PORT || 3000;
 const hbs = exphbs.create({
     defaultLayout: 'main',
     extname: 'hbs',
-    handlebars: allowInsecurePrototypeAccess(_handlebars)
+    handlebars: allowInsecurePrototypeAccess(_handlebars),
+    helpers: require('./utils/hbs-helpers')
 });
 
 const homeRoute = require('./routes/home');
