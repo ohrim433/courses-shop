@@ -13,6 +13,7 @@ const { SESSION_SECRET } = require('./config');
 const { MONGODB_URI } = require('./enums/db-enums');
 const varMiddleware = require('./middleware/variables');
 const userMiddleware = require('./middleware/user');
+const errorMiddleware = require('./middleware/error');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -60,6 +61,8 @@ app.use('/courses', coursesRoute);
 app.use('/cart', cartRoute);
 app.use('/orders', ordersRoute);
 app.use('/auth', authRoute);
+
+app.use(errorMiddleware);
 
 async function startMongo() {
     try {
