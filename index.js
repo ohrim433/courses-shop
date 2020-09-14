@@ -14,6 +14,7 @@ const { MONGODB_URI } = require('./enums/db-enums');
 const varMiddleware = require('./middleware/variables');
 const userMiddleware = require('./middleware/user');
 const errorMiddleware = require('./middleware/error');
+const fileMiddleware = require('./middleware/file');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -31,6 +32,7 @@ const coursesRoute = require('./routes/courses');
 const cartRoute = require('./routes/cart');
 const ordersRoute = require('./routes/orders');
 const authRoute = require('./routes/auth');
+const profileRoute = require('./routes/profile');
 
 const store = new MongoStore({
     collection: 'sessions',
@@ -42,6 +44,7 @@ app.set('view engine', 'hbs'); // start to use handlebars
 app.set('views', 'views'); // directory with hbs templates
 
 app.use(express.static(path.join(__dirname, 'public'))); // set "public" as static directory to use files from it
+app.use('/images', express.static(path.join(__dirname, 'images'))); // set "images" as static directory to use files from it
 app.use(express.urlencoded({extended: true}));
 
 app.use(session({
@@ -50,6 +53,7 @@ app.use(session({
     saveUninitialized: false,
     store
 }));
+app.use(fileMiddleware.single('avatar'));
 app.use(csrf());
 app.use(flash());
 app.use(varMiddleware);
@@ -61,6 +65,7 @@ app.use('/courses', coursesRoute);
 app.use('/cart', cartRoute);
 app.use('/orders', ordersRoute);
 app.use('/auth', authRoute);
+app.use('/profile', profileRoute);
 
 app.use(errorMiddleware);
 
